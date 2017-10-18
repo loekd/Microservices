@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CustomerService.Models;
+using CustomerService.Repositories;
 using EventTypes;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Models;
-using OrderService.Repositories;
 
-namespace OrderService.Controllers
+namespace CustomerService.Controllers
 {
     [Route("api/[controller]")]
-    public class SubscribeController : Controller
+    public class SubscriptionController : Controller
     {
         private readonly ICustomerRepository _customerRepository;
 
@@ -18,12 +18,14 @@ namespace OrderService.Controllers
         }
 
         [HttpPost("~/api/[controller]/[action]")]
-        public async Task<IActionResult> CustomerCreatedEvent([FromBody]CustomerCreatedEvent @event)
+        public async Task<IActionResult>  OrderCreatedEvent([FromBody]OrderCreatedEvent @event)
         {
-            await _customerRepository.Add(new Customer
+            await _customerRepository.Add(new Order
             {
                 Id = @event.Id,
-                Name = @event.Name
+                Product = @event.Product,
+                Quantity = @event.Quantity,
+                CustomerId = @event.CustomerId
             }).ConfigureAwait(true);
             return Ok();
         }

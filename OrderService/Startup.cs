@@ -49,7 +49,7 @@ namespace OrderService
         {
             var app = (IApplicationBuilder) state;
             var helper = app.ApplicationServices.GetRequiredService<IPubSubServiceHelper>();
-            helper.RegisterWithPublisher("http://localhost:2000/api/subscribe", typeof(CustomerCreatedEvent)).ConfigureAwait(false).GetAwaiter().GetResult();
+            helper.RegisterWithPublisher("http://localhost:2000/api/subscription", typeof(CustomerCreatedEvent)).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private void UnregisterWithPublisher(object state)
