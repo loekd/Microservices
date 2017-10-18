@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CustomerService.Controllers
 {
     [Route("api/[controller]")]
-    public class SubscribeController : Controller
+    public class SubscriptionController : Controller
     {
         [HttpPost("~/api/[controller]/[action]")]
         public IActionResult OrderCreatedEvent([FromBody]OrderCreatedEvent @event)
