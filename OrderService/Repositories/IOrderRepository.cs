@@ -8,6 +8,8 @@ namespace OrderService.Repositories
     {
         Task Add(Order order);
 
-        IEnumerable<Order> GetAll();
+        Task<IEnumerable<Order>> GetAll();
+
+        Task<Order> Find(int id);
     }
 }

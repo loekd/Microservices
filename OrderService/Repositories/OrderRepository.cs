@@ -18,9 +18,15 @@ namespace OrderService.Repositories
             return Task.CompletedTask;
         }
 
-        public IEnumerable<Order> GetAll()
+        public Task<IEnumerable<Order>> GetAll()
         {
-            return _orders.ToList();
+            return Task.FromResult(_orders.ToList().AsEnumerable());
+        }
+
+        public Task<Order> Find(int id)
+        {
+            var result = _orders.SingleOrDefault(o => o.Id == id);
+            return Task.FromResult(result);
         }
     }
 }

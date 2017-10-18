@@ -49,7 +49,28 @@ namespace OrderService.Controllers
             };
 
             await _pubSubServiceHelper.Publish(orderCreatedEvent).ConfigureAwait(true);
-            return Ok();
+
+            return Created($"/api/order/{order.Id}", order);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var result = await _orderRepository.GetAll().ConfigureAwait(true);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var result = await _orderRepository
+                .Find(id)
+                .ConfigureAwait(true);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }

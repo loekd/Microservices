@@ -22,8 +22,6 @@ namespace CustomerService
         {
             //persisting stuff in memory, so we need singletons
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
-            services.AddSingleton<IOrderRepository, OrderRepository>();
-
 
             var pubSubServiceHelper = new PubSubServiceHelper();
             services.AddSingleton<IPubSubServiceHelper>(pubSubServiceHelper);
