@@ -46,6 +46,7 @@ namespace PubSub
             var httpEndpointPubsub = _httpEndpointPubsub;
             if (!string.IsNullOrWhiteSpace(subUrl))
             {
+                // ReSharper disable once PossibleNullReferenceException
                 httpEndpointPubsub = $"{httpEndpointPubsub.TrimEnd('/')}/{subUrl.TrimStart('/')}";
             }
 

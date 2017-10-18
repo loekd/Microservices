@@ -60,5 +60,18 @@ namespace CustomerService.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("{customerId}/orders")]
+        public async Task<IActionResult> GetCustomerOrders(int customerId)
+        {
+            var result = await _customerRepository
+                .Find(customerId)
+                .ConfigureAwait(true);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result.Orders);
+        }
     }
 }
