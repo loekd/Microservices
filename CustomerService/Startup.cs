@@ -26,7 +26,8 @@ namespace CustomerService
             var pubSubServiceHelper = new PubSubServiceHelper();
             services.AddSingleton<IPubSubServiceHelper>(pubSubServiceHelper);
             services.AddSingleton<IEventPublisher>(new PubSubServiceEventPublisher(pubSubServiceHelper));
-            services.AddMvc();
+            services.AddMvc()
+                .AddXmlSerializerFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
