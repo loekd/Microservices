@@ -46,7 +46,7 @@ namespace CustomerService
         {
             var app = (IApplicationBuilder)state;
             var helper = app.ApplicationServices.GetRequiredService<IPubSubServiceHelper>();
-            helper.RegisterWithPublisher("http://localhost:5000/api/subscribe", typeof(OrderCreatedEvent)).ConfigureAwait(false).GetAwaiter().GetResult();
+            helper.RegisterWithPublisher("http://localhost:5000/api/subscription", typeof(OrderCreatedEvent)).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private void UnregisterWithPublisher(object state)
