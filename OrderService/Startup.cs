@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using EventTypes;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PubSub;
 
 namespace OrderService
 {
@@ -17,7 +19,9 @@ namespace OrderService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IPubSubServiceHelper>(new PubSubServiceHelper());
+            var pubSubServiceHelper = new PubSubServiceHelper();
+            services.AddSingleton<IPubSubServiceHelper>(pubSubServiceHelper);
+            services.AddSingleton<IEventPublisher>(new PubSubServiceEventPublisher(pubSubServiceHelper));
             services.AddMvc();
         }
 
@@ -39,7 +43,7 @@ namespace OrderService
         {
             var app = (IApplicationBuilder) state;
             var helper = app.ApplicationServices.GetRequiredService<IPubSubServiceHelper>();
-            helper.RegisterWithPublisher("http://localhost:2000/api/subscribe", "OrderCreated").ConfigureAwait(false).GetAwaiter().GetResult();
+            helper.RegisterWithPublisher("http://localhost:2000/api/subscribe", typeof(CustomerCreatedEvent)).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         private void UnregisterWithPublisher(object state)

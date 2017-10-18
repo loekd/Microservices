@@ -1,13 +1,13 @@
 ﻿using EventTypes;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OrderService.Controllers
+namespace CustomerService.Controllers
 {
     [Route("api/[controller]")]
     public class SubscribeController : Controller
     {
         [HttpPost("~/api/[controller]/[action]")]
-        public IActionResult CustomerCreatedEvent([FromBody]CustomerCreatedEvent @event)
+        public IActionResult OrderCreatedEvent([FromBody]OrderCreatedEvent @event)
         {
 
             return Ok();

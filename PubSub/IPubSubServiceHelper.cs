@@ -1,13 +1,17 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
-using PubSub;
 
-namespace OrderService
+namespace PubSub
 {
     public interface IPubSubServiceHelper
     {
         Task<HttpResponseMessage> RegisterWithPublisher(string subscribeCallbackUrl, string eventType);
+
+        Task<HttpResponseMessage> RegisterWithPublisher(string subscribeCallbackUrl, Type eventType);
+
         Task<HttpResponseMessage> PublishEvent(IEvent @event);
+
         Task<HttpResponseMessage> UnregisterWithPublisher();
     }
 }

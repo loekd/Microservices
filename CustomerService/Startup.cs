@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EventTypes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using PubSub;
 
 namespace CustomerService
 {
@@ -23,11 +19,14 @@ namespace CustomerService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var pubSubServiceHelper = new PubSubServiceHelper();
+            services.AddSingleton<IPubSubServiceHelper>(pubSubServiceHelper);
+            services.AddSingleton<IEventPublisher>(new PubSubServiceEventPublisher(pubSubServiceHelper));
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -35,6 +34,20 @@ namespace CustomerService
             }
 
             app.UseMvc();
+            applicationLifetime.ApplicationStarted.Register(RegisterWithPublisher, app);
+            applicationLifetime.ApplicationStopping.Register(UnregisterWithPublisher, app);
+        }
+
+        private void RegisterWithPublisher(object state)
+        {
+            var app = (IApplicationBuilder)state;
+            var helper = app.ApplicationServices.GetRequiredService<IPubSubServiceHelper>();
+            helper.RegisterWithPublisher("http://localhost:5000/api/subscribe", typeof(OrderCreatedEvent)).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        private void UnregisterWithPublisher(object state)
+        {
+            //TODO: implement
         }
     }
 }

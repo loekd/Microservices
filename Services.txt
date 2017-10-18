@@ -1,9 +1,9 @@
 Customer Service
-http://localhost:1000/api/
+http://localhost:5000/api/customer
 
 
 Order Service
-http://localhost:2000/api
+http://localhost:2000/api/order
 
 subscriber:
 POST json to:

@@ -2,7 +2,7 @@
 
 namespace EventTypes
 {
-    public class OrderCreated : IEvent
+    public class OrderCreatedEvent : IEvent
     {
         public string Product { get; set; }
 

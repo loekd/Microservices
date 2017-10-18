@@ -2,9 +2,8 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using PubSub;
 
-namespace OrderService
+namespace PubSub
 {
     public class PubSubServiceHelper : IPubSubServiceHelper
     {
@@ -13,6 +12,7 @@ namespace OrderService
 
         public PubSubServiceHelper()
         {
+            //TODO: move url to config
             _httpEndpointPubsub = "http://localhost:4000/api/pubsub";
             _httpClient = new HttpClient();
         }
@@ -26,6 +26,11 @@ namespace OrderService
             };
             string json = JsonConvert.SerializeObject(subscription);
             return PostData(json);
+        }
+
+        public Task<HttpResponseMessage> RegisterWithPublisher(string subscribeCallbackUrl, Type eventType)
+        {
+            return RegisterWithPublisher(subscribeCallbackUrl, eventType.Name);
         }
 
         public Task<HttpResponseMessage> PublishEvent(IEvent @event)
