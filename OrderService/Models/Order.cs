@@ -1,8 +1,6 @@
-﻿using PubSub;
-
-namespace EventTypes
+﻿namespace OrderService.Models
 {
-    public class OrderCreatedEvent : IEvent
+    public class Order
     {
         public int Id { get; set; }
 
@@ -11,6 +9,5 @@ namespace EventTypes
         public int Quantity { get; set; }
 
         public int CustomerId { get; set; }
-
     }
 }

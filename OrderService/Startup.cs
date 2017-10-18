@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OrderService.Repositories;
 using PubSub;
 
 namespace OrderService
@@ -19,6 +20,10 @@ namespace OrderService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //persisting stuff in memory, so we need singletons
+            services.AddSingleton<ICustomerRepository, CustomerRepository>();
+            services.AddSingleton<IOrderRepository, OrderRepository>();
+
             var pubSubServiceHelper = new PubSubServiceHelper();
             services.AddSingleton<IPubSubServiceHelper>(pubSubServiceHelper);
             services.AddSingleton<IEventPublisher>(new PubSubServiceEventPublisher(pubSubServiceHelper));

@@ -1,8 +1,6 @@
-﻿using PubSub;
-
-namespace EventTypes
+﻿namespace CustomerService.Models
 {
-    public class OrderCreatedEvent : IEvent
+    public class Order
     {
         public int Id { get; set; }
 
