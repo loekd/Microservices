@@ -2,6 +2,8 @@
 using EventTypes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PubSub;
@@ -28,6 +30,31 @@ namespace CustomerService
             services.AddSingleton<IEventPublisher>(new PubSubServiceEventPublisher(pubSubServiceHelper));
             services.AddMvc()
                 .AddXmlSerializerFormatters();
+
+            services.AddApiVersioning(options =>
+            {
+                //backward compatibility:
+                //options.AssumeDefaultVersionWhenUnspecified = true;
+                //implicit v1:
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                //oldest version as default:
+                //options.ApiVersionSelector = new LowestImplementedApiVersionSelector(options);
+                //current version as default:
+                //options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
+
+                //mediatype: application/json;v=1.0
+                //options.ApiVersionReader = new MediaTypeApiVersionReader();
+
+                //custom header
+                //options.ApiVersionReader = new HeaderApiVersionReader("x-version");
+
+                //everything combined (don't do this)
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new MediaTypeApiVersionReader(),
+                    new HeaderApiVersionReader("x-version"), 
+                    new QueryStringApiVersionReader(),
+                    new UrlSegmentApiVersionReader());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

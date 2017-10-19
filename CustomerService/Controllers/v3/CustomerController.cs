@@ -7,10 +7,13 @@ using EventTypes;
 using Microsoft.AspNetCore.Mvc;
 using PubSub;
 
-namespace CustomerService.Controllers
+namespace CustomerService.Controllers.v3
 {
-    //[ApiVersion("1.0")]
-    [Route("api/[controller]")]
+    /// <summary>
+    /// Example of a controller that can be reached by using /api/v3.0/customer
+    /// </summary>
+    [ApiVersion("3.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository _customerRepository;
@@ -50,6 +53,13 @@ namespace CustomerService.Controllers
             return Ok(result);
         }
 
+        [HttpGet, MapToApiVersion("3.1")]
+        public async Task<IActionResult> GetV3_1()
+        {
+            var result = await _customerRepository.GetAll().ConfigureAwait(true);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -79,13 +89,9 @@ namespace CustomerService.Controllers
         [HttpGet("version")]
         public IActionResult GetVersion()
         {
-            var version = GetType()
-                .GetCustomAttributes(typeof(ApiVersionAttribute), false)
-                .Cast<ApiVersionAttribute>()
-                .SingleOrDefault()?
+            var version = GetType().GetCustomAttributes(typeof(ApiVersionAttribute), false).Cast<ApiVersionAttribute>().Single()
                 .Versions.First();
-
-            return Ok($"{version?.MajorVersion ?? -1}.{version?.MinorVersion ?? -1}");
+            return Ok($"{version.MajorVersion}.{version.MinorVersion}");
         }
     }
 }

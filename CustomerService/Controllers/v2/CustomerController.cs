@@ -7,9 +7,12 @@ using EventTypes;
 using Microsoft.AspNetCore.Mvc;
 using PubSub;
 
-namespace CustomerService.Controllers
+namespace CustomerService.Controllers.v2
 {
-    //[ApiVersion("1.0")]
+    /// <summary>
+    /// Example of a controller that can be reached by using /api/customer?api-version=2.0
+    /// </summary>
+    [ApiVersion("2.0")]
     [Route("api/[controller]")]
     public class CustomerController : Controller
     {
@@ -79,13 +82,9 @@ namespace CustomerService.Controllers
         [HttpGet("version")]
         public IActionResult GetVersion()
         {
-            var version = GetType()
-                .GetCustomAttributes(typeof(ApiVersionAttribute), false)
-                .Cast<ApiVersionAttribute>()
-                .SingleOrDefault()?
+            var version = GetType().GetCustomAttributes(typeof(ApiVersionAttribute), false).Cast<ApiVersionAttribute>().Single()
                 .Versions.First();
-
-            return Ok($"{version?.MajorVersion ?? -1}.{version?.MinorVersion ?? -1}");
+            return Ok($"{version.MajorVersion}.{version.MinorVersion}");
         }
     }
 }
